@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: beige;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+
+        <h4>Enter the @GetMapping of the API You Want To Call</h4>
+        <input id="URL" size="80" value="webUser/update?jsonData=">
+
+        <h4>Enter the StringData Object that You Want To Update</h4>
+        <p style="margin-left:1.5rem">
+            A nice way to use this is to copy/paste a record from your
+            webUser/getAll API, then edit it in the box below, then click
+            "Call API".
+        </p>
+        <textarea id="URLparams" rows="20" cols="80">
+{
+"webUserId": "763",
+"userEmail": "",
+"userPassword": "",
+"userPassword2": "",
+"userImage": "",
+"birthday": "",
+"membershipFee": "",
+"userRoleId": ""
+}
+            </textarea>
+        <br />
+        <button onclick="launchAPI()">Call API (opens in new tab)</button>
+
+        <script>
+            function launchAPI() {
+                var api = document.getElementById("URL").value;
+                api = api.trim();
+
+                var URLparams = document.getElementById("URLparams").value;
+                URLparams = URLparams.trim();
+                //URLparams = URLparams.replace("\n", "");
+
+                console.log("URL before encoding: " + api + URLparams);
+
+                var url = api + encodeURIComponent(URLparams);
+                console.log("URL after encoding: " + url);
+
+                window.open(url, "_blank");
+            }
+
+        </script>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                background-color:beige;
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+
+            <h4>Enter the @GetMapping of the API You Want To Call</h4>
+            <input id="URL" size="80" value = "webUser/getById?userId=">
+
+            <h4>Enter the URL Parameter(s)</h4>
+            <input id="URLparams" value="1">
+
+            <br/>
+            <br/>
+            <button onclick="callAPI()">Call API (opens in new tab)</button>
+
+            <script>
+                function callAPI() {
+                    var URL_input = document.getElementById("URL").value;
+
+                    var URLparams_input = document.getElementById("URLparams").value;
+                    url = URL_input.trim() + URLparams_input.trim();
+
+                    window.open(url, "_blank");
+                }
+            </script>
+
+        </div>
+    </body>
+</html>
