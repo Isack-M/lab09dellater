@@ -1,5 +1,8 @@
 package model.exoticFish;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import dbUtils.*;
 
 public class DbMods {
@@ -87,5 +90,121 @@ public class DbMods {
         } // customerId is not null and not empty string.
         return errorMsgs;
     } // insert
+
+    
+    public static StringData findById(DbConn dbc, String id) {
+        StringData sd = new StringData();
+
+        if (id == null) {
+            sd.errorMsg = "Cannot findById (exoticFish): id is null";
+            return sd;
+        }
+
+        Integer intId;
+        try {
+            intId = Integer.valueOf(id);
+        } catch (Exception e) {
+            sd.errorMsg = "Cannot findById (exoticFish): URL parameter 'id' can't be converted to an Integer.";
+            return sd;
+        }
+
+        try {
+            String sql = "SELECT exotic_fish.exotic_fish_id, exotic_fish.fishspecies_name, exotic_fish.image, exotic_fish.species_population, "
+                    + "exotic_fish.depth_found, exotic_fish.habitat, exotic_fish.interesting_fact, exotic_fish.web_user_id, "
+                    + "web_user.user_email, web_user.user_image "
+                    + "FROM exotic_fish, web_user "
+                    + "WHERE exotic_fish.web_user_id = web_user.web_user_id "
+                    + "AND exotic_fish.exotic_fish_id = ?";
+
+            PreparedStatement stmt = dbc.getConn().prepareStatement(sql);
+
+            // Put the ID into the SQL statement.
+            stmt.setInt(1, intId);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+
+                sd.exotic_fish_id = Format.fmtInteger(results.getObject("exotic_fish_id"));
+                sd.fishspecies_name = Format.fmtString(results.getObject("fishspecies_name"));
+                sd.image = Format.fmtString(results.getObject("image"));
+                sd.species_population = Format.fmtInteger(results.getObject("species_population"));
+                sd.depth_found = Format.fmtInteger(results.getObject("depth_found"));
+                sd.habitat = Format.fmtString(results.getObject("habitat"));
+                sd.interesting_fact = Format.fmtString(results.getObject("interesting_fact"));
+                sd.web_user_id = Format.fmtInteger(results.getObject("web_user_id"));
+                sd.user_email = Format.fmtString(results.getObject("user_email"));
+                sd.user_image = Format.fmtString(results.getObject("user_image"));
+
+            } else {
+                sd.errorMsg = "Exotic Fish Not Found.";
+            }
+
+            results.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            sd.errorMsg = "Exception thrown in model.exoticFish.DbMods.findById(): " + e.getMessage();
+        }
+
+        return sd;
+
+    } // findById
+
+
+    public static StringData update(StringData inputData, DbConn dbc) {
+        StringData errorMsgs = validate(inputData);
+
+        errorMsgs.exotic_fish_id =
+                Validate.integerMsg(inputData.exotic_fish_id, true);
+
+        if (errorMsgs.characterCount() > 0) {
+            errorMsgs.errorMsg = "Please try again";
+            return errorMsgs;
+
+        } else {
+
+            String sql = "UPDATE exotic_fish SET fishspecies_name = ?, image = ?, "
+                    + "species_population = ?, depth_found = ?, habitat = ?, "
+                    + "interesting_fact = ?, web_user_id = ? WHERE exotic_fish_id = ?";
+
+            PrepStatement pStatement = new PrepStatement(dbc, sql);
+
+            pStatement.setString(1, inputData.fishspecies_name);
+            pStatement.setString(2, inputData.image);
+            pStatement.setInt(3, Validate.convertInteger(inputData.species_population));
+            pStatement.setInt(4, Validate.convertInteger(inputData.depth_found));
+            pStatement.setString(5, inputData.habitat);
+            pStatement.setString(6, inputData.interesting_fact);
+            pStatement.setInt(7, Validate.convertInteger(inputData.web_user_id));
+            pStatement.setInt(8, Validate.convertInteger(inputData.exotic_fish_id));
+
+            int numRows = pStatement.executeUpdate();
+
+            errorMsgs.errorMsg = pStatement.getErrorMsg();
+
+            if (errorMsgs.errorMsg.length() == 0) {
+                if (numRows == 1) {
+                    errorMsgs.errorMsg = "";
+                } else if (numRows == 0) {
+                    errorMsgs.errorMsg = "No Exotic Fish record was found with that ID.";
+                } else {
+                    errorMsgs.errorMsg = numRows
+                            + " records were updated when exactly 1 was expected.";
+                }
+
+            } else if (errorMsgs.errorMsg.contains("foreign key")) {
+                errorMsgs.errorMsg = "Invalid Web User Id - " + errorMsgs.errorMsg;
+
+            } else if (errorMsgs.errorMsg.contains("Duplicate entry")) {
+                errorMsgs.errorMsg = "That fish species name is already taken - "
+                        + errorMsgs.errorMsg;
+            }
+        }
+
+        return errorMsgs;
+    } // update
+
+
 
 }

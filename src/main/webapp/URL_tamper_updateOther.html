@@ -7,7 +7,7 @@ and open the template in the editor.
 <html>
 
 <head>
-    <title>TODO supply a title</title>
+    <title>Exotic Fish Update</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -21,8 +21,8 @@ and open the template in the editor.
 <body>
     <div>
 
-        <h4>Enter the @GetMapping of the (Other Update) API You Want To Call</h4>
-        <input id="URL" size="80" value="CHANGE THIS: webUser/update?jsonData=">
+        <h4>Enter the @GetMapping of the Exotic Fish Update API You Want To Call</h4>
+        <input id="URL" size="80" value="/exoticFish/update?jsonData=">
 
         <h4>Enter the StringData Object that You Want To Update</h4>
         <p style="margin-left:1.5rem">
@@ -31,16 +31,15 @@ and open the template in the editor.
             "Call API".
         </p>
         <textarea id="URLparams" rows="20" cols="80">
-CHANGE THIS TOO:
 {
-"webUserId": "763",
-"userEmail": "",
-"userPassword": "",
-"userPassword2": "",
-"userImage": "",
-"birthday": "",
-"membershipFee": "",
-"userRoleId": ""
+    "exotic_fish_id": "1",
+    "fishspecies_name": "Mandarin Fish",
+    "image": "https://cis-linux2.temple.edu/tomcat11/fa26_3308_tur74385/pics/mandarinfish.jpg",
+    "species_population": "18000",
+    "depth_found": "15",
+    "habitat": "Coral Reefs",
+    "interesting_fact": "They secrete a toxic, foul-smelling mucus instead of having scales.",
+    "web_user_id": "1"
 }
             </textarea>
         <br />
